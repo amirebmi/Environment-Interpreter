@@ -108,11 +108,19 @@ let sl4 = App (sumlist, list4)
    the function map : ('a -> 'b) -> 'a list -> 'b list 
    Note: do not implement this as map: (('a -> 'b)*'a list) -> 'b list
  *)
-let map = one
+ let map = 
+  Rec("map", "function", 
+      Rec("_", "list", 
+	  Match (Var "list", 
+		 EmptyList, 
+		 "hd", "tl", Cons(App(Var "function", Var "hd"), 
+				  App(App(Var "map", Var "function"), 
+				      Var "tl")))))
+;;
     
 (* Replace the constant "one" below with your implementation of 
    the function plus1 that adds one to an integer *)
-let plus1 = one
+   let plus1 = Rec ("plus1", "n", (Op (Var "n", Plus, one)))
 
 (* Use plus1 and map, defined above, to implement the function 
    incr_all, which adds 1 to every element of a list. Examples:
@@ -120,7 +128,9 @@ let plus1 = one
    incr_all [] == []
    incr_all [1;2;3] == [2;3;4]
 *)
-let incr_all = one
+let incr_all = Rec ("incr_all", "l", (App (App (map, plus1), Var "l")))
+
+let test_incr_all = App (incr_all, list4)
 
 (* Replace the constant one below by implementing a function that 
  * takes a list of pairs of integers and returns a list of integers 
@@ -131,7 +141,12 @@ let incr_all = one
   sum_pairs [(1,2); (3,4)] == [3; 7]
  *)
 
-let sum_pairs = one
+ let sum_pair = Rec ("sum_pair", "p", Op (Fst (Var "p"), Plus, Snd (Var "p")))
+ let sum_pairs = Rec ("sum_pairs", "l", App (App (map, sum_pair), Var "l"))
+
+
+
+ 
 
 (*********)
 (* TESTS *)
