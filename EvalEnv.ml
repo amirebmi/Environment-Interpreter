@@ -91,6 +91,7 @@ let prune_env (env: env) (free: variable list) : env =
 
 (* evaluation; use eval_loop to recursively evaluate subexpressions *)
 let eval_body (env:env) (eval_loop:env -> exp -> exp) (e:exp) : exp = 
+  let eval_env = eval_loop env in
   match e with
     | Var x -> 
       (match lookup_env env x with 
